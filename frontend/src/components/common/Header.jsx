@@ -10,6 +10,7 @@ import {
   GoogleLoginButton,
 } from "react-social-login-buttons";
 import { useAuth } from "@/store/auth";
+import { FaUserTie } from "react-icons/fa";
 
 export default function Header() {
   const { user, googleLogin, logout } = useAuth();
@@ -21,7 +22,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="shadow-sm py-3 px-3 md:px-10">
+    <header className="shadow-sm bg-white w-[100vw] py-3 px-3 md:px-10 fixed z-20">
       <div className="flex justify-between">
         <Link to="/">
           <h1 className="text-2xl font-semibold text-blue-700 flex items-center gap-2">
@@ -37,13 +38,26 @@ export default function Header() {
         {/* Mobile Devices */}
         <div className="md:hidden flex items-center gap-3">
           {user ? (
-            <button
-              role="button"
-              onClick={logout}
-              className="text-red-500 hover:underline text-3xl"
-            >
-              <IoLogOut />
-            </button>
+            <>
+              {user.isAdmin && (
+                <NavLink
+                  to="/admin"
+                  className="text-gray-500 hover:text-gray-800"
+                >
+                  <div className="flex items-center gap-1">
+                    <FaUserTie />
+                    Admin
+                  </div>
+                </NavLink>
+              )}
+              <button
+                role="button"
+                onClick={logout}
+                className="text-red-500 hover:underline text-3xl"
+              >
+                <IoLogOut />
+              </button>
+            </>
           ) : (
             <button
               role="button"
@@ -71,9 +85,22 @@ export default function Header() {
             </NavLink>
           ))}
           {user ? (
-            <button onClick={logout} className="text-red-500 text-3xl">
-              <IoLogOut />
-            </button>
+            <>
+              {user.isAdmin && (
+                <NavLink
+                  to="/admin"
+                  className="text-gray-500 hover:text-gray-800"
+                >
+                  <div className="flex items-center gap-1">
+                    <FaUserTie />
+                    Admin
+                  </div>
+                </NavLink>
+              )}
+              <button onClick={logout} className="text-red-500 text-3xl">
+                <IoLogOut />
+              </button>
+            </>
           ) : (
             <button
               role="button"

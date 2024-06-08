@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   return {
     define: {
       "process.env.GOOGLE_CLIENT_ID": JSON.stringify(env.GOOGLE_CLIENT_ID),
+      "process.env.GOOGLE_API_KEY": JSON.stringify(env.GOOGLE_API_KEY),
     },
     server: {
       proxy: {
