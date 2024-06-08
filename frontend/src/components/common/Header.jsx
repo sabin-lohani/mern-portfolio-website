@@ -9,15 +9,17 @@ import {
   FacebookLoginButton,
   GoogleLoginButton,
 } from "react-social-login-buttons";
-import { LoginSocialFacebook, LoginSocialGoogle } from "reactjs-social-login";
+import { useAuth } from "@/store/auth";
 
 export default function Header() {
+  const { user, googleLogin, logout } = useAuth();
   const [siteSetting, setSiteSetting] = useState(settings);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const links = [
     { name: "Home", icon: <IoHome />, href: "/" },
     { name: "Feed", icon: <IoNewspaper />, href: "/feed" },
   ];
+
   return (
     <header className="shadow-sm py-3 px-3 md:px-10">
       <div className="flex justify-between">
@@ -34,21 +36,24 @@ export default function Header() {
 
         {/* Mobile Devices */}
         <div className="md:hidden flex items-center gap-3">
-          <button
-            role="button"
-            onClick={() => {}}
-            className="text-red-500 hover:underline text-3xl"
-          >
-            <IoLogOut />
-          </button>
-          <button
-            role="button"
-            className="text-gray-800 flex items-center gap-1 p-2 rounded-lg border border-gray-300 hover:bg-gray-100"
-            onClick={() => setShowLoginModal(true)}
-          >
-            <FaUser />
-            Login
-          </button>
+          {user ? (
+            <button
+              role="button"
+              onClick={logout}
+              className="text-red-500 hover:underline text-3xl"
+            >
+              <IoLogOut />
+            </button>
+          ) : (
+            <button
+              role="button"
+              className="text-gray-800 flex items-center gap-1 p-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+              onClick={() => setShowLoginModal(true)}
+            >
+              <FaUser />
+              Login
+            </button>
+          )}
         </div>
 
         {/* PC */}
@@ -65,43 +70,43 @@ export default function Header() {
               </div>
             </NavLink>
           ))}
-          {/* <button
-            onClick={() => {}}
-            className="text-red-500 text-3xl"
-          >
-            <IoLogOut />
-          </button> */}
-          {/* Like posts, comment on posts, participate in polls, and more. */}
-          <button
-            role="button"
-            className="text-gray-800 flex items-center gap-1 p-2 rounded-lg border border-gray-300 hover:bg-gray-100"
-            onClick={() => setShowLoginModal(true)}
-          >
-            <FaUser />
-            Login
-          </button>
+          {user ? (
+            <button onClick={logout} className="text-red-500 text-3xl">
+              <IoLogOut />
+            </button>
+          ) : (
+            <button
+              role="button"
+              className="text-gray-800 flex items-center gap-1 p-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+              onClick={() => setShowLoginModal(true)}
+            >
+              <FaUser />
+              Login
+            </button>
+          )}
         </div>
       </div>
-      <Modal
-        isOpen={showLoginModal}
-        onRequestClose={() => setShowLoginModal(false)}
-        closeTimeoutMS={100}
-        ariaHideApp={false}
-        className="max-w-sm w-[90%] p-3 absolute top-56 left-[50%] translate-x-[-50%] bg-white border-2 rounded-md shadow-md"
-      >
-        <div className="flex justify-end">
-          <button>
-            <HiOutlineXMark
-              className="text-xl"
-              onClick={() => setShowLoginModal(false)}
-            />
-          </button>
-        </div>
-        <h2 className="text-center text-2xl font-semibold">Login</h2>
-        <p className="text-center text-xs font-light mt-2 mb-5">
-          Like posts, comment on posts, and participate in polls
-        </p>
-        {/* <LoginSocialFacebook appId="" onReject={() => {}} onResolve={() => {}}>
+      {!user && (
+        <Modal
+          isOpen={showLoginModal}
+          onRequestClose={() => setShowLoginModal(false)}
+          closeTimeoutMS={100}
+          ariaHideApp={false}
+          className="max-w-sm w-[90%] p-3 absolute top-56 left-[50%] translate-x-[-50%] bg-white border-2 rounded-md shadow-md"
+        >
+          <div className="flex justify-end">
+            <button>
+              <HiOutlineXMark
+                className="text-xl"
+                onClick={() => setShowLoginModal(false)}
+              />
+            </button>
+          </div>
+          <h2 className="text-center text-2xl font-semibold">Login</h2>
+          <p className="text-center text-xs font-light mt-2 mb-5">
+            Like posts, comment on posts, and participate in polls
+          </p>
+          {/* <LoginSocialFacebook appId="" onReject={() => {}} onResolve={() => {}}>
           <FacebookLoginButton
             style={{
               fontSize: "1rem",
@@ -112,8 +117,8 @@ export default function Header() {
           />
         </LoginSocialFacebook> */}
 
-        <LoginSocialGoogle>
           <GoogleLoginButton
+            onClick={googleLogin}
             style={{
               fontSize: "1rem",
               display: "flex",
@@ -121,8 +126,8 @@ export default function Header() {
               alignItems: "center",
             }}
           />
-        </LoginSocialGoogle>
-      </Modal>
+        </Modal>
+      )}
     </header>
   );
 }
