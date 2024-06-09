@@ -80,7 +80,7 @@ html {
 }
 
 .active {
-  @apply text-blue-700 border-blue-700 font-bold border-b-2;
+  /* @apply text-blue-700 border-blue-700 font-bold border-b-2; */
 }
 
 .ReactModal__Overlay {

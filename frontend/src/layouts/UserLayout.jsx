@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 export default function UserLayout() {
   return (
     <>
-      <Header />
+      <Header fixed={true} />
       <Outlet />
       <Footer />
     </>
