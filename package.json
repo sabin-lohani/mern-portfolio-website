@@ -1,0 +1,10 @@
+{
+    "name": "mern-portfolio-website",
+    "private": true,
+    "workspaces": [
+      "frontend",
+      "backend",
+      "schemas"
+    ]
+  }
+  
