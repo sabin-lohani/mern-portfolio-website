@@ -16,6 +16,18 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
   next();
 });
 
+export const verifyJWTIfExist = asyncHandler(async (req, _, next) => {
+  const token =
+    req.cookies?.jwt || req.header("Authorization")?.replace("Bearer ", "");
+
+  if (token) {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decodedToken?.id);
+    req.user = user;
+  }
+  next();
+});
+
 export const verifyAdmin = asyncHandler(async (req, _, next) => {
   if (!req.user.isAdmin) throw new ApiError(403, "Unauthorized request");
 
