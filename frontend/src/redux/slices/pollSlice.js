@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import pollService from "@/services/pollService";
+import likeService from "@/services/likeService";
 import { toast } from "react-toastify";
 
 export const createPoll = createAsyncThunk(
@@ -63,6 +64,20 @@ export const votePoll = createAsyncThunk(
     try {
       const { data: pollData } = await pollService.votePoll(id, data);
       return pollData;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const toggleLikePoll = createAsyncThunk(
+  "poll/toggleLikePoll",
+  async (formData, thunkAPI) => {
+    try {
+      const { data } = await likeService.toggleLike({
+        ...formData,
+        item_type: "poll",
+      });
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -229,6 +244,41 @@ export const pollSlice = createSlice({
         }
       })
       .addCase(votePoll.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message =
+          action.payload.response?.data?.message || "An error occurred";
+        toast.error(state.message);
+      });
+    builder
+      .addCase(toggleLikePoll.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(toggleLikePoll.fulfilled, (state, action) => {
+        console.log(action.payload.data);
+        if (state.singlePoll) {
+          state.singlePoll.likeCount = action.payload.data.likeCount;
+          state.singlePoll.hasLiked = action.payload.data.hasLiked;
+        }
+        state.polls = state.polls.map((poll) =>
+          poll._id === action.payload.data.item_id
+            ? {
+                ...poll,
+                likeCount: action.payload.data.likeCount,
+                hasLiked: action.payload.data.hasLiked,
+              }
+            : poll
+        );
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = action.payload.success;
+        state.message = action.payload.message;
+      })
+      .addCase(toggleLikePoll.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

@@ -7,9 +7,6 @@ import {
   updatePoll,
   deletePoll,
   vote,
-  likePoll,
-  unlikePoll,
-  commentOnPoll,
   getSinglePoll,
 } from "../controllers/poll.controllers.js";
 import {
@@ -30,8 +27,5 @@ router
   .put(verifyJWT, verifyAdmin, validateSchema(pollSchema), updatePoll)
   .delete(verifyJWT, verifyAdmin, deletePoll);
 router.post("/:id/vote", verifyJWT, vote);
-router.post("/:id/like", verifyJWT, likePoll);
-router.delete("/:id/like", verifyJWT, unlikePoll);
-router.post("/:id/comment", verifyJWT, commentOnPoll);
 
 export default router;
