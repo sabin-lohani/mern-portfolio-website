@@ -9,10 +9,13 @@ import mongoose from "mongoose";
 export const createPoll = asyncHandler(async (req, res) => {
   const { question, options } = req.body;
 
-  const poll = await Poll.create({
+  const newPoll = await Poll.create({
     question,
     options,
+    user: req.user._id,
   });
+
+  const poll = await newPoll.populate("user");
 
   res.status(201).json(new ApiResponse(201, poll, "success"));
 });
@@ -67,6 +70,19 @@ export const getAllPolls = async (req, res) => {
     {
       $addFields: {
         likeCount: { $size: "$likes" },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $addFields: {
+        user: { $arrayElemAt: ["$user", 0] },
       },
     },
     {
@@ -125,7 +141,10 @@ export const getSinglePoll = asyncHandler(async (req, res) => {
 export const updatePoll = asyncHandler(async (req, res) => {
   const { question, options } = req.body;
 
-  const poll = await Poll.findById(req.params.id);
+  const poll = await Poll.findById(req.params.id).populate(
+    "user",
+    "name image"
+  );
 
   if (!poll) throw new ApiError(404, "Poll not found");
 
