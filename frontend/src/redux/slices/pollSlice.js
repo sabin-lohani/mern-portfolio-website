@@ -151,6 +151,7 @@ export const pollSlice = createSlice({
         state.isSuccess = false;
       })
       .addCase(getSinglePoll.fulfilled, (state, action) => {
+        console.log(action.payload.data);
         state.singlePoll = action.payload.data;
         state.isLoading = false;
         state.isError = false;

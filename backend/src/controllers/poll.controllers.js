@@ -104,8 +104,8 @@ export const getSinglePoll = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const pollQuery = mongoose.isValidObjectId(id)
-    ? Poll.findById(id)
-    : Poll.findOne({ slug: id });
+    ? Poll.findById(id).populate("user", "name image")
+    : Poll.findOne({ slug: id }).populate("user", "name image");
 
   const poll = await pollQuery;
   if (!poll) throw new ApiError(404, "Poll not found");
