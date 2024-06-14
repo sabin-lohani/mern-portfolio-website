@@ -2,19 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { AuthProvider } from "./store/auth";
 import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import store from "./store/index.js";
-import { Bounce, ToastContainer } from "react-toastify";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Provider } from "react-redux";
+import store from "./redux/store.js";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID}>
-      <AuthProvider>
-        <Provider store={store}>
+      <Provider store={store}>
+        <AuthProvider>
           <BrowserRouter>
             <App />
             <ToastContainer
@@ -23,8 +23,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               newestOnTop={true}
             />
           </BrowserRouter>
-        </Provider>
-      </AuthProvider>
+        </AuthProvider>
+      </Provider>
     </GoogleOAuthProvider>
   </React.StrictMode>
 );

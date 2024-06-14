@@ -1,7 +1,8 @@
 import settings from "@/data/SiteSettings.json";
+
 export default function Footer() {
   return (
-    <footer className="border-t bg-white py-5 px-3 md:px-10 text-center">
+    <footer className="border-t bg-white p-3 md:px-10 text-center">
       <p>
         &copy; {settings.user_name} {new Date().getFullYear()}
       </p>

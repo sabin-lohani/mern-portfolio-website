@@ -1,12 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
-import { googleAuth } from "@/services/api.js";
-import axios from "axios";
+import { googleAuth, logoutUser, fetchUserInfo } from "@/services/authService";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const responseGoogle = async (authResult) => {
     try {
@@ -26,18 +26,21 @@ export const AuthProvider = ({ children }) => {
     flow: "auth-code",
   });
   const logout = () => {
-    axios.post("/api/v1/auth/logout").then(() => setUser(null));
+    logoutUser().then(() => setUser(null));
   };
 
   useEffect(() => {
     const fetchUser = async () => {
+      setLoading(true);
       try {
-        const result = await axios.get("/api/v1/auth");
+        const result = await fetchUserInfo();
         setUser(result.data.data);
       } catch (e) {
         if (e.response?.status === 401) {
           logout();
         }
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -46,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, googleLogin, logout }}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

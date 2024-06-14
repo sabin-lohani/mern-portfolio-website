@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-// Import reducers
-import pollReducer from "@/features/poll/poll.slice.js";
+// import reducers
+import postReducer from "./slices/postSlice.js";
 
 const store = configureStore({
   reducer: {
-    poll: pollReducer,
+    post: postReducer,
   },
 });
 

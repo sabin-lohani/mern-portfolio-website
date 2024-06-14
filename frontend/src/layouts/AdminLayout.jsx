@@ -1,8 +1,8 @@
-import Sidebar, { SidebarItem } from "@/components/Sidebar";
 import Header from "@/components/common/Header";
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { IoNewspaper } from "react-icons/io5";
 import { BiPoll } from "react-icons/bi";
+import Sidebar, { SidebarItem } from "@/components/common/Sidebar";
 
 export default function AdminLayout() {
   return (
@@ -17,7 +17,7 @@ export default function AdminLayout() {
           <SidebarItem
             icon={<BiPoll size={20} />}
             text="Manage Polls"
-            link="/admin/voting"
+            link="/admin/polls"
           />
         </Sidebar>
         <div className="flex-1">

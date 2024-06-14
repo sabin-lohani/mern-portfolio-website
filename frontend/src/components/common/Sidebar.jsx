@@ -2,16 +2,13 @@ import { ChevronFirst, ChevronLast, MoreVertical } from "lucide-react";
 import { createContext, useContext, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import siteSetting from "@/data/SiteSettings.json";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SidebarContext = createContext();
 export default function Sidebar({ children }) {
-  const user = {
-    image:
-      "https://scontent.fktm7-1.fna.fbcdn.net/v/t39.30808-6/214654543_4025450307570457_1943036515532569101_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=NTf-EEv7mZ4Q7kNvgENlvl2&_nc_ht=scontent.fktm7-1.fna&oh=00_AYBHqqpw4iugc_oEyR-6i-ccT2kJ16ExBfM-HYcgeqDs0w&oe=6669ECF7",
-    name: "Demo User",
-    email: "demoemail@xyz.com",
-  };
+  const { user } = useAuth();
   const [expanded, setExpanded] = useState(false);
+
   return (
     <aside className="h-screen">
       <nav className="h-full flex flex-col shadow-sm border-r">

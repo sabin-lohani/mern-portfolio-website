@@ -1,9 +1,9 @@
-import settings from "@/data/SiteSettings.json";
+import siteSetting from "@/data/SiteSettings.json";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
-import axios from "axios";
 import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
   const [videos, setVideos] = useState([]);
@@ -15,7 +15,7 @@ export default function Home() {
       .get("https://www.googleapis.com/youtube/v3/search", {
         params: {
           part: "snippet",
-          channelId: settings.user_youtube_channel_id,
+          channelId: siteSetting.user_youtube_channel_id,
           maxResults: 8,
           order: "date",
           type: "video",
@@ -33,38 +33,35 @@ export default function Home() {
 
   useEffect(() => {
     fetchYoutubeVideo();
-  }, []);
+  }, [setVideos]);
+
   return (
     <main>
-      <section className="h-[100vh] relative text-white">
+      <section className="h-[100vh] relative">
         {/* background */}
         <div className="hero-background absolute z-1 w-full h-full blur-[2px]">
           <img
             className="w-full h-full object-cover"
-            src={settings.site_background_image}
+            src={siteSetting.site_background_image}
             alt="site background"
           />
         </div>
-        {/* overlay */}
+        {/* dark overlay */}
         <div className="bg-black absolute opacity-20 z-2 w-full h-full"></div>
-
         {/* content */}
-        <div className="absolute z-3 w-full h-full">
+        <div className="absolute z-3 w-full h-full text-white">
           <div className="w-full h-full flex flex-col md:flex-row items-center justify-center md:gap-5">
-            {/* User Image */}
-            <div className="">
-              <img
-                className="h-40 w-40 md:h-60 md:w-60 rounded-sm object-cover border border-2 border-gray-100"
-                src={settings.user_profile_image}
-                alt={settings.user_name}
-              />
-            </div>
+            <img
+              className="h-40 w-40 md:h-60 md:w-60 rounded-sm object-cover border-2 border-gray-100"
+              src={siteSetting.user_profile_image}
+              alt={siteSetting.user_name}
+            />
             <div className="flex flex-col items-center">
               <h1 className="text-4xl md:text-6xl font-bold mt-4 md:my-2">
-                {settings.user_name}
+                {siteSetting.user_name}
               </h1>
               <p className="text-md md:text-xl text-gray-300">
-                {settings.user_bio}
+                {siteSetting.user_bio}
               </p>
               <div className="flex items-center gap-2 mt-3">
                 <Button className="bg-transparent" variant="outline" asChild>
@@ -78,9 +75,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       <Separator />
-
       <section className="w-full py-10">
         <h2 className="text-2xl mb-5 md:text-3xl font-bold text-center">
           My Videos
@@ -110,16 +105,14 @@ export default function Home() {
 
           <div className="flex justify-center mt-10">
             <Button className="bg-blue-700 hover:bg-blue-800" asChild>
-              <a href={settings.user_youtube_link} target="_blank">
+              <a href={siteSetting.user_youtube_link} target="_blank">
                 Watch More
               </a>
             </Button>
           </div>
         </div>
       </section>
-
       <Separator />
-
       <section className="w-full py-10" id="contact">
         <h2 className="text-2xl mb-5 md:text-3xl font-bold text-center">
           Contact me
@@ -129,11 +122,11 @@ export default function Home() {
           <div className="w-[300px] border py-10 px-10 flex flex-col items-center">
             <img
               className="w-40 h-40 object-cover rounded-full border-2 border-white"
-              src={settings.user_profile_image}
-              alt={settings.user_name}
+              src={siteSetting.user_profile_image}
+              alt={siteSetting.user_name}
             />
             <p className="text-2xl font-semibold text-center my-2">
-              {settings.user_name}
+              {siteSetting.user_name}
             </p>
 
             {/* Contact info */}
@@ -141,26 +134,26 @@ export default function Home() {
               <li className="my-4 md:my-1 hover:underline underline-offset-2 cursor-pointer">
                 <i className="fa-solid fa-phone me-2"></i>
                 <a
-                  href={`tel:${settings.user_phone}`}
+                  href={`tel:${siteSetting.user_phone}`}
                   className="text-gray-500"
                 >
-                  {settings.user_phone}
+                  {siteSetting.user_phone}
                 </a>
               </li>
               <li className="my-4 md:my-1 hover:underline underline-offset-2 cursor-pointer">
                 <i className="fa-solid fa-envelope me-2"></i>
                 <a
-                  href={`mailto:${settings.user_email}`}
+                  href={`mailto:${siteSetting.user_email}`}
                   className="text-gray-500"
                 >
-                  {settings.user_email}
+                  {siteSetting.user_email}
                 </a>
               </li>
             </ul>
 
             {/* Social links */}
             <ul className="mt-3 flex justify-center text-3xl md:text-2xl gap-8 md:gap-5">
-              {settings.user_social_links.map((item, idx) => (
+              {siteSetting.user_social_links.map((item, idx) => (
                 <li key={idx}>
                   <a
                     href={item.link}
@@ -179,7 +172,7 @@ export default function Home() {
           <div>
             <iframe
               className="h-full w-[300px] lg:w-[600px] border"
-              src={settings.user_location_link}
+              src={siteSetting.user_location_link}
               allowFullScreen=""
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
