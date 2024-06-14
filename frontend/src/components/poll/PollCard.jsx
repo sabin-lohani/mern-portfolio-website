@@ -115,6 +115,11 @@ export default function PollCard({ poll }) {
         item={poll}
         onLike={handleLike}
         commentsLink={"/polls/" + (user?.isAdmin ? poll._id : poll.slug)}
+        shareData={{
+          title: poll.question,
+          text: `Poll by ${poll.user.name}`,
+          url: `/polls/${poll.slug}`,
+        }}
       />
     </div>
   );

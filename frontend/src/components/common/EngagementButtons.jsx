@@ -7,8 +7,14 @@ import {
 } from "react-icons/ai";
 import { Separator } from "../ui/separator";
 import { Link } from "react-router-dom";
+import handleShare from "@/utils/handleShare";
 
-export default function EngagementButtons({ item, onLike, commentsLink }) {
+export default function EngagementButtons({
+  item,
+  onLike,
+  commentsLink,
+  shareData,
+}) {
   return (
     <div>
       <div className="flex justify-between p-2 text-sm">
@@ -39,7 +45,13 @@ export default function EngagementButtons({ item, onLike, commentsLink }) {
             <span className="hidden md:block">Comment</span>
           </Link>
         </Button>
-        <Button className="gap-1 w-full" variant="ghost">
+        <Button
+          className="gap-1 w-full"
+          variant="ghost"
+          onClick={() =>
+            handleShare(shareData.title, shareData.text, shareData.url)
+          }
+        >
           <AiOutlineShareAlt size={20} />
           <span className="hidden md:block">Share</span>
         </Button>

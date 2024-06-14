@@ -5,22 +5,11 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import PostDropdown from "../common/PostDropdown";
 import { useSelector } from "react-redux";
+import handleShare from "@/utils/handleShare";
 
 export default function PostCard({ post }) {
   const { user } = useAuth();
   const postState = useSelector((state) => state.post);
-
-  function handleShare() {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: post.title,
-          text: post.subtitle ? post.subtitle : "Check out this post!",
-          url: window.location.origin + "/posts/" + post.slug,
-        })
-        .catch(console.error);
-    }
-  }
 
   return (
     <div
@@ -64,7 +53,13 @@ export default function PostCard({ post }) {
           <Button
             variant="link"
             className="p-0 hover:text-gray-500"
-            onClick={handleShare}
+            onClick={() =>
+              handleShare(
+                post.title,
+                `Post by ${post.user.name}`,
+                `/posts/${post.slug}`
+              )
+            }
           >
             <Share2 size={20} />
           </Button>
