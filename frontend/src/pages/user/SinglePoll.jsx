@@ -1,7 +1,8 @@
+import CommentSection from "@/components/common/CommentSection";
 import PollCard from "@/components/poll/PollCard";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { getSinglePoll } from "@/redux/slices/pollSlice";
+import { commentOnPoll, getSinglePoll } from "@/redux/slices/pollSlice";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -15,8 +16,24 @@ export default function SinglePoll() {
   const pollState = useSelector((state) => state.poll);
 
   useEffect(() => {
-    dispatch(getSinglePoll(id));
-  }, [id]);
+    if (id) {
+      dispatch(getSinglePoll(id));
+    }
+  }, [id, dispatch]);
+
+  function handleAddComment(e) {
+    e.preventDefault();
+    dispatch(
+      commentOnPoll({
+        item_id: id,
+        item_type: "poll",
+        text: e.target.comment.value,
+      })
+    );
+  }
+
+  if (!pollState.singlePoll)
+    return <div className="text-center pt-20">Poll not found</div>;
 
   return (
     <main className="p-10 pt-20">
@@ -30,13 +47,8 @@ export default function SinglePoll() {
             <ArrowLeft size={20} />
           </Button>
         </div>
-        {pollState.isLoading ? (
-          <div className="flex justify-center">
-            <Loader2 className="animate-spin" />
-          </div>
-        ) : (
-          pollState.singlePoll && <PollCard poll={pollState.singlePoll} />
-        )}
+        <PollCard poll={pollState.singlePoll} />
+        <CommentSection itemId={id} itemType="poll" />
       </div>
     </main>
   );

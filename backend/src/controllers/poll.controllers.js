@@ -102,7 +102,6 @@ export const getAllPolls = async (req, res) => {
 
 export const getSinglePoll = asyncHandler(async (req, res) => {
   const { id } = req.params;
-
   const pollQuery = mongoose.isValidObjectId(id)
     ? Poll.findById(id).populate("user", "name image")
     : Poll.findOne({ slug: id }).populate("user", "name image");

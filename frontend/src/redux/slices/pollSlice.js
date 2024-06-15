@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import pollService from "@/services/pollService";
 import likeService from "@/services/likeService";
 import { toast } from "react-toastify";
+import commentService from "@/services/commentService";
 
 export const createPoll = createAsyncThunk(
   "poll/createPoll",
@@ -83,6 +84,17 @@ export const toggleLikePoll = createAsyncThunk(
     }
   }
 );
+export const commentOnPoll = createAsyncThunk(
+  "poll/commentOnPoll",
+  async (formData, thunkAPI) => {
+    try {
+      const { data } = await commentService.createComment(formData);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const initialState = {
   polls: [],
@@ -151,7 +163,6 @@ export const pollSlice = createSlice({
         state.isSuccess = false;
       })
       .addCase(getSinglePoll.fulfilled, (state, action) => {
-        console.log(action.payload.data);
         state.singlePoll = action.payload.data;
         state.isLoading = false;
         state.isError = false;
@@ -240,9 +251,6 @@ export const pollSlice = createSlice({
         state.isError = false;
         state.isSuccess = action.payload.success;
         state.message = action.payload.message;
-        if (state.isSuccess) {
-          toast.success("Voted successfully");
-        }
       })
       .addCase(votePoll.rejected, (state, action) => {
         state.isLoading = false;
@@ -260,7 +268,6 @@ export const pollSlice = createSlice({
         state.message = "";
       })
       .addCase(toggleLikePoll.fulfilled, (state, action) => {
-        console.log(action.payload.data);
         if (state.singlePoll) {
           state.singlePoll.likeCount = action.payload.data.likeCount;
           state.singlePoll.hasLiked = action.payload.data.hasLiked;
@@ -280,6 +287,31 @@ export const pollSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(toggleLikePoll.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message =
+          action.payload.response?.data?.message || "An error occurred";
+        toast.error(state.message);
+      });
+    builder
+      .addCase(commentOnPoll.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(commentOnPoll.fulfilled, (state, action) => {
+        state.singlePoll.comments.unshift(action.payload.data);
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = action.payload.success;
+        state.message = action.payload.message;
+        if (state.isSuccess) {
+          toast.success("Comment added successfully");
+        }
+      })
+      .addCase(commentOnPoll.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

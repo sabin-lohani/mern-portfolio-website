@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import EngagementButtons from "../common/EngagementButtons";
 
 export default function PollCard({ poll }) {
-  console.log(poll);
   const dispatch = useDispatch();
   const pollState = useSelector((state) => state.poll);
   const { user } = useAuth();

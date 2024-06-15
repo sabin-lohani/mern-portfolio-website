@@ -21,7 +21,6 @@ export const like = asyncHandler(async (req, res) => {
     item_type,
   });
 
-  let newLike;
   if (like) {
     await Like.findByIdAndDelete(like._id);
   } else {
