@@ -1,0 +1,23 @@
+{
+    "site_background_image": "https://static3.depositphotos.com/1003352/171/i/950/depositphotos_1715395-stock-photo-city-of-pokhara-nepal.jpg",
+    "user_name": "Himal Gajurel",
+    "user_email": "himalg14@gmail.com",
+    "user_phone": "+977 984-1039765",
+    "user_bio": "Welcome to my Website",
+    "user_profile_image": "https://scontent.fktm7-1.fna.fbcdn.net/v/t39.30808-6/214654543_4025450307570457_1943036515532569101_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=NSDbkPQWfM8Q7kNvgHp4YLd&_nc_ht=scontent.fktm7-1.fna&oh=00_AYBdaOiikOIkZxP2zLNXYTJgDlUTiidVUVdMlM9slq0oBQ&oe=66732777", 
+    "user_location_link": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3534.0391966144266!2d86.04117247532179!3d27.65425897621303!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ebc5be06c0eb1d%3A0x34ceb8d8ae1d584!2sHimal%20gajurel!5e0!3m2!1sen!2snp!4v1717837411700!5m2!1sen!2snp",
+    "user_youtube_link": "https://www.youtube.com/@himalgajurel5110",
+    "user_youtube_channel_id": "UComKoQEo3812D5YPI-_892Q",
+    "user_social_links": [
+        {
+            "name": "Facebook",
+            "icon": "fab fa-facebook",
+            "link": "https://www.facebook.com/himal.gajurel"
+        },
+        {
+            "name": "Twitter",
+            "icon": "fab fa-twitter",
+            "link": "https://www.twitter.com/himal_gajurel"
+        }
+    ]
+}

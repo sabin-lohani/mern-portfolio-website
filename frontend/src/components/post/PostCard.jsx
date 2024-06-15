@@ -1,4 +1,4 @@
-import { Dot, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Link } from "react-router-dom";
@@ -50,8 +50,6 @@ export default function PostCard({ post, isSingle }) {
           <div>
             <span className="text-sm text-gray-500 flex items-center">
               <Moment fromNow>{post.updatedAt}</Moment>
-              <Dot size={10} />
-              {post.updatedAt && new Date(post.updatedAt).toDateString()}
             </span>
           </div>
         </div>

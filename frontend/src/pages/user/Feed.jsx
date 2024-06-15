@@ -46,6 +46,9 @@ export default function Feed() {
       </div>
 
       <div className="mx-5 md:w-[50%] md:mx-auto">
+        {feedItems.length === 0 && (
+          <p className="text-center py-5 text-sm">No posts</p>
+        )}
         {feedItems.map((item) => (
           <div key={item._id} className="my-5">
             {item.options ? (
