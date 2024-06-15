@@ -50,15 +50,15 @@ export default function Comment({ comment }) {
         <p>{comment.text}</p>
       </div>
       {comment.likeCount > 0 && (
-        <div className="text-sm ml-8 px-2">
-          <p className="text-right">
+        <div className="text-sm ml-8 px-2 text-gray-600">
+          <p className="text-right pt-2">
             {comment.likeCount} like{comment.likeCount > 1 ? "s" : ""}
           </p>
         </div>
       )}
 
       {user?.isAdmin && (
-        <div className="ml-8 p-2">
+        <div className="ml-10">
           {!comment.hasLiked ? (
             <Button variant="link" className="text-sm p-0" onClick={toggleLike}>
               Like

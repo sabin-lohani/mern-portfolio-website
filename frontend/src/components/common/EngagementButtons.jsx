@@ -67,6 +67,7 @@ export default function EngagementButtons({
           <span className="hidden md:block">Share</span>
         </Button>
       </div>
+      <Separator />
     </div>
   );
 }

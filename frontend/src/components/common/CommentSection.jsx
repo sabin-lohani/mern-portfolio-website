@@ -31,7 +31,7 @@ export default function CommentSection({ itemId, itemType }) {
   }, [itemId, dispatch]);
 
   return (
-    <div>
+    <div className="my-5">
       {user && (
         <form className="flex my-3" onSubmit={onComment}>
           <img src={user.image} alt="avatar" className="w-8 h-8 rounded-full" />
@@ -57,6 +57,11 @@ export default function CommentSection({ itemId, itemType }) {
       )}
       <Separator />
       <div>
+        {!user && (
+          <p className="pt-3 font-semibold text-sm text-blue-700 text-center">
+            Login to post your comment
+          </p>
+        )}
         {commentState.comments.length > 0 ? (
           commentState.comments.map((comment) => (
             <Comment key={comment._id} comment={comment} />

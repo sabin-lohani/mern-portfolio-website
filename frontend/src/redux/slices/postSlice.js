@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import postService from "@/services/postService";
 import { toast } from "react-toastify";
+import likeService from "@/services/likeService";
 
 export const createPost = createAsyncThunk(
   "post/createPost",
@@ -62,6 +63,20 @@ export const updatePost = createAsyncThunk(
   async ({ id, formData }, thunkAPI) => {
     try {
       const { data } = await postService.updatePost(id, formData);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const toggleLikePost = createAsyncThunk(
+  "post/toggleLikePost",
+  async (formData, thunkAPI) => {
+    try {
+      const { data } = await likeService.toggleLike({
+        ...formData,
+        item_type: "post",
+      });
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -233,6 +248,39 @@ export const postSlice = createSlice({
         state.message =
           action.payload.response?.data?.message || "An error occurred";
         toast.error(state.message);
+      });
+    builder
+      .addCase(toggleLikePost.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(toggleLikePost.fulfilled, (state, action) => {
+        if (state.singlePost) {
+          state.singlePost.likeCount = action.payload.data.likeCount;
+          state.singlePost.hasLiked = action.payload.data.hasLiked;
+        }
+        state.posts = state.posts.map((post) =>
+          post._id === action.payload.data.item_id
+            ? {
+                ...post,
+                likeCount: action.payload.data.likeCount,
+                hasLiked: action.payload.data.hasLiked,
+              }
+            : post
+        );
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = action.payload.success;
+        state.message = action.payload.message;
+      })
+      .addCase(toggleLikePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message =
+          action.payload.response?.data?.message || "An error occurred";
       });
   },
 });

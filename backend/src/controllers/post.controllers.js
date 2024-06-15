@@ -4,6 +4,8 @@ import ApiError from "../utils/ApiError.js";
 import Post from "../models/post.models.js";
 import { deleteByPublicId, uploadToCloudinary } from "../utils/cloudinary.js";
 import mongoose from "mongoose";
+import Like from "../models/like.models.js";
+import Comment from "../models/comment.models.js";
 
 export const createPost = asyncHandler(async (req, res) => {
   const { title, subtitle, content } = req.body;
@@ -149,10 +151,39 @@ export const deleteImage = asyncHandler(async (req, res) => {
 
 export const getPost = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const post = await Post.findById(id).populate("user", "name image");
+  const postQuery = mongoose.isValidObjectId(id)
+    ? Post.findById(id).populate("user", "name image")
+    : Post.findOne({ slug: id }).populate("user", "name image");
+
+  const post = await postQuery;
   if (!post) throw new ApiError(404, "Post not found");
 
-  res.status(200).json(new ApiResponse(200, post, "success"));
+  const likes = await Like.find({
+    item_id: post._id,
+    item_type: "post",
+  }).populate("user");
+
+  const comments = await Comment.find({
+    item_id: post._id,
+    item_type: "post",
+  }).populate("user");
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        ...post.toObject(),
+        comments,
+        commentCount: comments.length,
+        likes,
+        likeCount: likes.length,
+        hasLiked: likes.some(
+          (like) => like.user._id.toString() === req.user._id.toString()
+        ),
+      },
+      "success"
+    )
+  );
 });
 
 export const updatePost = asyncHandler(async (req, res) => {
