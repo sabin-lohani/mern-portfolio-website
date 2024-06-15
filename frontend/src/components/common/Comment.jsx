@@ -1,17 +1,23 @@
 import Moment from "react-moment";
 import CommentActions from "./CommentActions";
 import { useDispatch } from "react-redux";
-import { deleteComment, updateComment } from "@/redux/slices/commentSlice";
-import { useSelector } from "react-redux";
+import {
+  deleteComment,
+  toggleCommentLike,
+  updateComment,
+} from "@/redux/slices/commentSlice";
+import { Button } from "../ui/button";
 
 export default function Comment({ comment }) {
   const dispatch = useDispatch();
-  const commentState = useSelector((state) => state.comment);
   function handleCommentDelete() {
     dispatch(deleteComment(comment._id));
   }
   function handleCommentUpdate(text) {
     dispatch(updateComment({ id: comment._id, text }));
+  }
+  function toggleLike() {
+    dispatch(toggleCommentLike({ item_id: comment._id }));
   }
 
   return (
@@ -38,6 +44,29 @@ export default function Comment({ comment }) {
       </div>
       <div className="ml-8 px-2">
         <p>{comment.text}</p>
+      </div>
+      {comment.likeCount > 0 && (
+        <div className="text-sm ml-8 px-2">
+          <p className="text-right">
+            {comment.likeCount} like{comment.likeCount > 1 ? "s" : ""}
+          </p>
+        </div>
+      )}
+
+      <div className="ml-8 p-2">
+        {!comment.hasLiked ? (
+          <Button variant="link" className="text-sm p-0" onClick={toggleLike}>
+            Like
+          </Button>
+        ) : (
+          <Button
+            variant="link"
+            className="text-blue-700 text-sm p-0"
+            onClick={toggleLike}
+          >
+            Unlike
+          </Button>
+        )}
       </div>
     </div>
   );

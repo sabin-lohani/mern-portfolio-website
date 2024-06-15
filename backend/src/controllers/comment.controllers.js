@@ -4,6 +4,7 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import Poll from "../models/poll.models.js";
 import Post from "../models/post.models.js";
+import mongoose from "mongoose";
 
 export const createComment = asyncHandler(async (req, res) => {
   const { item_id, item_type, text } = req.body;
@@ -65,10 +66,81 @@ export const updateComment = asyncHandler(async (req, res) => {
 
 export const getComments = asyncHandler(async (req, res) => {
   const { item_id, item_type } = req.query;
+  const userId = new mongoose.Types.ObjectId(req.user?._id);
 
-  const comments = await Comment.find({ item_id, item_type })
-    .populate("user", "name image")
-    .sort({ createdAt: -1 });
+  const comments = await Comment.aggregate([
+    {
+      $match: {
+        item_id: new mongoose.Types.ObjectId(item_id),
+        item_type,
+      },
+    },
+    {
+      $sort: { createdAt: -1 },
+    },
+    {
+      $lookup: {
+        from: "likes",
+        let: { commentId: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$item_id", "$$commentId"] },
+                  { $eq: ["$item_type", "comment"] },
+                  { $eq: ["$user", userId] },
+                ],
+              },
+            },
+          },
+          { $limit: 1 },
+        ],
+        as: "user_like",
+      },
+    },
+    {
+      $addFields: {
+        hasLiked: { $gt: [{ $size: "$user_like" }, 0] },
+      },
+    },
+    {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "item_id",
+        as: "likes",
+      },
+    },
+    {
+      $addFields: {
+        likeCount: { $size: "$likes" },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $addFields: {
+        user: { $arrayElemAt: ["$user", 0] },
+      },
+    },
+    {
+      $project: {
+        "user.name": 1,
+        "user.image": 1,
+        text: 1,
+        createdAt: 1,
+        hasLiked: 1,
+        likeCount: 1,
+      },
+    },
+  ]);
 
   res.status(200).json(new ApiResponse(200, comments, "success"));
 });

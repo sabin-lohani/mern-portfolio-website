@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import commentService from "@/services/commentService";
+import likeService from "@/services/likeService";
 
 export const createComment = createAsyncThunk(
   "comments/createComment",
@@ -50,6 +51,21 @@ export const updateComment = createAsyncThunk(
   }
 );
 
+export const toggleCommentLike = createAsyncThunk(
+  "comments/toggleCommentLike",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await likeService.toggleLike({
+        ...data,
+        item_type: "comment",
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const initialState = {
   comments: [],
   isLoading: false,
@@ -82,6 +98,7 @@ const commentSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getComments.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.comments = action.payload.data;
         state.isLoading = false;
       })
@@ -123,6 +140,29 @@ const commentSlice = createSlice({
         toast.success(state.message);
       })
       .addCase(updateComment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.message =
+          action.payload?.response?.data?.message || "An error occurred";
+        toast.error(state.message);
+      });
+    builder
+      .addCase(toggleCommentLike.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(toggleCommentLike.fulfilled, (state, action) => {
+        state.comments = state.comments.map((comment) =>
+          comment._id === action.payload.data.item_id
+            ? {
+                ...comment,
+                likeCount: action.payload.data.likeCount,
+                hasLiked: action.payload.data.hasLiked,
+              }
+            : comment
+        );
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(toggleCommentLike.rejected, (state, action) => {
         state.isLoading = false;
         state.message =
           action.payload?.response?.data?.message || "An error occurred";
