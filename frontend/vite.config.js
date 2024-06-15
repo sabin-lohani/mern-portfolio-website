@@ -8,7 +8,7 @@ dotenv.config();
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    mainFields: [],
+    mainFields: ["browser"],
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
