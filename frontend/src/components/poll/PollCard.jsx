@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import PollDropdown from "./PollDropdown";
 import { useSelector } from "react-redux";
 import EngagementButtons from "../common/EngagementButtons";
+import { toast } from "react-toastify";
 
 export default function PollCard({ poll }) {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ export default function PollCard({ poll }) {
   const debouncedOption = useDebounce(selectedOption, 200);
 
   function handleVote(optionId) {
+    if (!user) return toast.error("You need to login to vote");
     dispatch(votePoll({ id: poll._id, data: { optionId } }));
   }
   function handleLike() {
@@ -65,7 +67,7 @@ export default function PollCard({ poll }) {
               </p>
             </div>
           </div>
-          <PollDropdown poll={poll} />
+          {user?.isAdmin && <PollDropdown poll={poll} />}
         </div>
 
         <Separator className="my-3" />
@@ -77,9 +79,11 @@ export default function PollCard({ poll }) {
           </div>
 
           <div className="my-3">
-            <p className="text-right text-xs text-gray-500 my-1">
-              {totalVotes} vote{totalVotes > 1 && "s"}
-            </p>
+            {existingVote && (
+              <p className="text-right text-xs text-gray-500 my-1">
+                {totalVotes} vote{totalVotes > 1 && "s"}
+              </p>
+            )}
             <RadioGroup
               value={selectedOption}
               onValueChange={setSelectedOption}
@@ -89,21 +93,26 @@ export default function PollCard({ poll }) {
                   <RadioGroupItem value={option._id} id={option._id} />
                   <Label className="border w-full p-3" htmlFor={option._id}>
                     {option.name}
-                    <span className="text-xs text-gray-500 ml-2">
-                      {option.votes.length} vote{option.votes.length > 1 && "s"}
-                    </span>
-                    <div className="h-2 bg-gray-200 rounded-sm mt-2">
-                      {totalVotes > 0 && (
-                        <div
-                          className="h-2 bg-blue-700 rounded-sm"
-                          style={{
-                            width: `${
-                              (option.votes.length / totalVotes) * 100
-                            }%`,
-                          }}
-                        />
-                      )}
-                    </div>
+                    {existingVote && (
+                      <>
+                        <span className="text-xs text-gray-500 ml-2">
+                          {option.votes.length} vote
+                          {option.votes.length > 1 && "s"}
+                        </span>
+                        <div className="h-2 bg-gray-200 rounded-sm mt-2">
+                          {totalVotes > 0 && (
+                            <div
+                              className="h-2 bg-blue-700 rounded-sm"
+                              style={{
+                                width: `${
+                                  (option.votes.length / totalVotes) * 100
+                                }%`,
+                              }}
+                            />
+                          )}
+                        </div>
+                      </>
+                    )}
                   </Label>
                 </div>
               ))}

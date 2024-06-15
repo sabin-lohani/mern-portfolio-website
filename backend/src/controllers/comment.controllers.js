@@ -66,7 +66,7 @@ export const updateComment = asyncHandler(async (req, res) => {
 
 export const getComments = asyncHandler(async (req, res) => {
   const { item_id, item_type } = req.query;
-  const userId = new mongoose.Types.ObjectId(req.user?._id);
+  const userId = req.user?._id ? new mongoose.Types.ObjectId(req.user._id) : "";
 
   const comments = await Comment.aggregate([
     {

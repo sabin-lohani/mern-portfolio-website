@@ -21,17 +21,6 @@ export default function SinglePoll() {
     }
   }, [id, dispatch]);
 
-  function handleAddComment(e) {
-    e.preventDefault();
-    dispatch(
-      commentOnPoll({
-        item_id: id,
-        item_type: "poll",
-        text: e.target.comment.value,
-      })
-    );
-  }
-
   if (!pollState.singlePoll)
     return <div className="text-center pt-20">Poll not found</div>;
 
@@ -48,7 +37,7 @@ export default function SinglePoll() {
           </Button>
         </div>
         <PollCard poll={pollState.singlePoll} />
-        <CommentSection itemId={id} itemType="poll" />
+        <CommentSection itemId={pollState.singlePoll._id} itemType="poll" />
       </div>
     </main>
   );

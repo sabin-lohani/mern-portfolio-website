@@ -8,6 +8,8 @@ import {
 import { Separator } from "../ui/separator";
 import { Link } from "react-router-dom";
 import handleShare from "@/utils/handleShare";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "react-toastify";
 
 export default function EngagementButtons({
   item,
@@ -15,6 +17,7 @@ export default function EngagementButtons({
   commentsLink,
   shareData,
 }) {
+  const { user } = useAuth();
   return (
     <div>
       <div className="flex justify-between p-2 text-sm">
@@ -31,14 +34,22 @@ export default function EngagementButtons({
       </div>
       <Separator />
       <div className="my-1 flex gap-1">
-        <Button className="gap-1 w-full" variant="ghost" onClick={onLike}>
-          {item.hasLiked ? (
-            <AiFillLike size={20} />
-          ) : (
-            <AiOutlineLike size={20} />
-          )}
-          <span className="hidden md:block">Like</span>
-        </Button>
+        {user && (
+          <Button
+            className="gap-1 w-full"
+            variant="ghost"
+            onClick={() => {
+              user ? onLike() : toast.error("Please login to like the post");
+            }}
+          >
+            {item.hasLiked ? (
+              <AiFillLike size={20} />
+            ) : (
+              <AiOutlineLike size={20} />
+            )}
+            <span className="hidden md:block">Like</span>
+          </Button>
+        )}
         <Button className="gap-1 w-full" variant="ghost" asChild>
           <Link to={commentsLink}>
             <AiOutlineComment size={20} />

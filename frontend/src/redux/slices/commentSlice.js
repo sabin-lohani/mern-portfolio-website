@@ -98,7 +98,6 @@ const commentSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getComments.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.comments = action.payload.data;
         state.isLoading = false;
       })

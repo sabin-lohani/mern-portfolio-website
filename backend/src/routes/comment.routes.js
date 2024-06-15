@@ -11,10 +11,7 @@ import {
 } from "../controllers/comment.controllers.js";
 const router = express.Router();
 
-router
-  .route("/")
-  .post(verifyJWT, createComment)
-  .get(verifyJWTIfExist, getComments);
+router.route("/").post(verifyJWT, createComment).get(getComments);
 router
   .route("/:id")
   .delete(verifyJWT, deleteComment)

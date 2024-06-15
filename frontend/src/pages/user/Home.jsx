@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [videos, setVideos] = useState([]);
@@ -67,8 +68,8 @@ export default function Home() {
                 <Button className="bg-transparent" variant="outline" asChild>
                   <a href="#contact">Contact me</a>
                 </Button>
-                <Button className="bg-blue-700 hover:bg-blue-800">
-                  Explore
+                <Button className="bg-blue-700 hover:bg-blue-800" asChild>
+                  <Link to="/feed">Explore</Link>
                 </Button>
               </div>
             </div>

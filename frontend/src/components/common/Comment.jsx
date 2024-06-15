@@ -7,8 +7,10 @@ import {
   updateComment,
 } from "@/redux/slices/commentSlice";
 import { Button } from "../ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Comment({ comment }) {
+  const { user } = useAuth();
   const dispatch = useDispatch();
   function handleCommentDelete() {
     dispatch(deleteComment(comment._id));
@@ -36,11 +38,13 @@ export default function Comment({ comment }) {
             <Moment fromNow>{comment.updatedAt}</Moment>
           </div>
         </div>
-        <CommentActions
-          comment={comment}
-          handleCommentDelete={handleCommentDelete}
-          handleCommentUpdate={handleCommentUpdate}
-        />
+        {user?.isAdmin && (
+          <CommentActions
+            comment={comment}
+            handleCommentDelete={handleCommentDelete}
+            handleCommentUpdate={handleCommentUpdate}
+          />
+        )}
       </div>
       <div className="ml-8 px-2">
         <p>{comment.text}</p>
@@ -53,21 +57,23 @@ export default function Comment({ comment }) {
         </div>
       )}
 
-      <div className="ml-8 p-2">
-        {!comment.hasLiked ? (
-          <Button variant="link" className="text-sm p-0" onClick={toggleLike}>
-            Like
-          </Button>
-        ) : (
-          <Button
-            variant="link"
-            className="text-blue-700 text-sm p-0"
-            onClick={toggleLike}
-          >
-            Unlike
-          </Button>
-        )}
-      </div>
+      {user?.isAdmin && (
+        <div className="ml-8 p-2">
+          {!comment.hasLiked ? (
+            <Button variant="link" className="text-sm p-0" onClick={toggleLike}>
+              Like
+            </Button>
+          ) : (
+            <Button
+              variant="link"
+              className="text-blue-700 text-sm p-0"
+              onClick={toggleLike}
+            >
+              Unlike
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

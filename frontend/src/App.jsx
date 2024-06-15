@@ -10,12 +10,14 @@ import Home from "./pages/user/Home";
 import ManagePosts from "./pages/admin/ManagePosts";
 import ManagePolls from "./pages/admin/ManagePolls";
 import SinglePoll from "./pages/user/SinglePoll";
+import Feed from "./pages/user/Feed";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<UserLayout />}>
         <Route index element={<Home />} />
+        <Route path="feed" element={<Feed />} />
         <Route path="/polls/:id" element={<SinglePoll />} />
       </Route>
       <Route path="/admin" element={<AdminRoute element={<AdminLayout />} />}>
