@@ -140,6 +140,7 @@ export const postSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(getPosts.rejected, (state, action) => {
+        console.log("Get posts Error", action);
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
