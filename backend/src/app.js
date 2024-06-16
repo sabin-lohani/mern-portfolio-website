@@ -5,31 +5,24 @@ import errorHandler from "./middlewares/errorHandler.middlewares.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
-console.log("using origin ", process.env.CORS_ORIGIN);
 
 // Middleware to log request origin and allowed origin
 app.use((req, res, next) => {
   console.log(`Request Origin: ${req.headers.origin}`);
-  console.log(`Allowed Origin: ${allowedOrigin}`);
-  next();
-});
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*"); // Allow all origins
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  console.log(`Allowed Origin: ${process.env.CORS_ORIGIN}`);
   next();
 });
 
+const whitelist = process.env.CORS_ORIGIN.split(",");
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN,
   credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
+  origin: (origin, callback) => {
+    if (whitelist.includes(origin)) return callback(null, true);
+
+    callback(new Error("Not allowed by CORS"));
+  },
 };
-// app.use(cors(corsOptions));
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
