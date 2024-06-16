@@ -6,7 +6,22 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 console.log("using origin ", process.env.CORS_ORIGIN);
-app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
+
+// Middleware to log request origin and allowed origin
+app.use((req, res, next) => {
+  console.log(`Request Origin: ${req.headers.origin}`);
+  console.log(`Allowed Origin: ${allowedOrigin}`);
+  next();
+});
+
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN,
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
+};
+app.use(cors(corsOptions));
+
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
