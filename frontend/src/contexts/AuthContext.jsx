@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { googleAuth, logoutUser, fetchUserInfo } from "@/services/authService";
+import { Loader2 } from "lucide-react";
 
 export const AuthContext = createContext();
 
@@ -49,7 +50,21 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, googleLogin, logout }}>
-      {!loading && children}
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <Loader2 size={30} className="animate-spin me-2" />
+          Loading
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };

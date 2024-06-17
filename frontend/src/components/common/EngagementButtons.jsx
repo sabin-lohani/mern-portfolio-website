@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import handleShare from "@/utils/handleShare";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 export default function EngagementButtons({
   item,
@@ -18,11 +19,23 @@ export default function EngagementButtons({
   shareData,
 }) {
   const { user } = useAuth();
+
+  const [likeCount, setLikeCount] = useState(item.likeCount);
+  const [hasLiked, setHasLiked] = useState(item.hasLiked);
+
+  function _handleLike() {
+    if (!user) toast.error("Please login to like the post");
+    const newLikeCount = hasLiked ? likeCount - 1 : likeCount + 1;
+    setLikeCount(newLikeCount);
+    setHasLiked(!hasLiked);
+
+    onLike();
+  }
   return (
     <div>
       <div className="flex justify-between p-2 text-sm">
-        <div className={`${item.likeCount > 0 ? "visible" : "invisible"}`}>
-          {item.likeCount + " like" + (item.likeCount > 1 ? "s" : "")}
+        <div className={`${likeCount > 0 ? "visible" : "invisible"}`}>
+          {likeCount + " like" + (likeCount > 1 ? "s" : "")}
         </div>
         <div
           className={`${item.comments?.length > 0 ? "visible" : "invisible"}`}
@@ -38,15 +51,9 @@ export default function EngagementButtons({
           <Button
             className="gap-1 w-full"
             variant="ghost"
-            onClick={() => {
-              user ? onLike() : toast.error("Please login to like the post");
-            }}
+            onClick={_handleLike}
           >
-            {item.hasLiked ? (
-              <AiFillLike size={20} />
-            ) : (
-              <AiOutlineLike size={20} />
-            )}
+            {hasLiked ? <AiFillLike size={20} /> : <AiOutlineLike size={20} />}
             <span className="hidden md:block">Like</span>
           </Button>
         )}
