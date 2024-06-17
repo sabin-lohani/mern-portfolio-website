@@ -90,11 +90,13 @@ export default function SinglePost() {
           onLike={handleLike}
           shareData={{
             title: postState.singlePost.title,
-            text: `Poll by ${postState.singlePost.user.name}`,
-            url: `/polls/${postState.singlePost.slug}`,
+            text: `Post by ${postState.singlePost.user.name}`,
+            url: `/posts/${postState.singlePost.slug}`,
           }}
         />
-        <CommentSection itemId={postState.singlePost._id} itemType="post" />
+        <div className="p-3 md-p-0">
+          <CommentSection itemId={postState.singlePost._id} itemType="post" />
+        </div>
       </div>
     </main>
   );
