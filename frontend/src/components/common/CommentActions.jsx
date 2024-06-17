@@ -51,7 +51,7 @@ export default function CommentActions({
             <MoreVertical size={15} />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {user?.isAdmin && (
+            {(user?.isAdmin || user._id == comment.user._id) && (
               <>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem className="cursor-pointer">

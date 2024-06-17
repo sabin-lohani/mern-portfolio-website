@@ -29,6 +29,9 @@ export default function CommentSection({ itemId, itemType }) {
   useEffect(() => {
     dispatch(getComments({ item_id: itemId, item_type: itemType }));
   }, [itemId, dispatch]);
+  useEffect(() => {
+    setComment("");
+  }, [commentState.comments]);
 
   return (
     <div className="my-5">
