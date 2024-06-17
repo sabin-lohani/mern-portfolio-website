@@ -38,7 +38,7 @@ export default function Comment({ comment }) {
             <Moment fromNow>{comment.updatedAt}</Moment>
           </div>
         </div>
-        {(user?.isAdmin || user._id == comment.user._id) && (
+        {(user?.isAdmin || user?._id == comment.user._id) && (
           <CommentActions
             comment={comment}
             handleCommentDelete={handleCommentDelete}
