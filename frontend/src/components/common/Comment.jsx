@@ -57,7 +57,7 @@ export default function Comment({ comment }) {
         </div>
       )}
 
-      {user?.isAdmin && (
+      {user && (
         <div className="ml-10">
           {!comment.hasLiked ? (
             <Button variant="link" className="text-sm p-0" onClick={toggleLike}>
