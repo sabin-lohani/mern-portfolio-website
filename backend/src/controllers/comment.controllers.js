@@ -132,8 +132,6 @@ export const getComments = asyncHandler(async (req, res) => {
     },
     {
       $project: {
-        "user.name": 1,
-        "user.image": 1,
         text: 1,
         createdAt: 1,
         hasLiked: 1,
