@@ -178,7 +178,7 @@ export const getPost = asyncHandler(async (req, res) => {
         likes,
         likeCount: likes.length,
         hasLiked: likes.some(
-          (like) => like.user._id.toString() === req.user._id.toString()
+          (like) => like.user?._id.toString() === req.user?._id.toString()
         ),
       },
       "success"
